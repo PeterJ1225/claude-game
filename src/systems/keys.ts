@@ -12,4 +12,6 @@ export const SYS = {
   interaction: 'interaction',
   dialog: 'dialog',
   npc: 'npc',
+  mining: 'mining',
+  combat: 'combat',
 } as const;

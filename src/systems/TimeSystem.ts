@@ -50,7 +50,7 @@ export class TimeSystem {
 
   // 过夜结算流水线（SPEC 4.5，步 1–10；步 11 自动存档由睡觉编排者随后 await 完成）。
   // 编排者只写 time.*，其余每步调用对应 owner 的编排期结算方法。
-  processNewDay(faintContext: 'normal' | 'farm' | 'mine' = 'normal'): void {
+  processNewDay(faintContext: 'normal' | 'farm' = 'normal'): void {
     const t = GameState.data.time;
     // 1 推进日期与时刻
     t.minute = DAY_START_MINUTE;
@@ -84,11 +84,10 @@ export class TimeSystem {
     ServiceLocator.get<FarmSystem>(SYS.farm).resetWatered();
     // 7 工具在途升级
     ServiceLocator.get<ToolSystem>(SYS.tool).tickUpgrades();
-    // 8 体力/生命 + 晕倒/熬夜惩罚
-    ServiceLocator.get<EnergySystem>(SYS.energy).restoreOnSleep(faintContext);
-    if (faintContext !== 'normal') {
-      ServiceLocator.get<EconomySystem>(SYS.economy).applyFaintPenalty(faintContext);
-      // TODO(M5): mine 晕倒还需随机丢失 ≤3 背包物品 + 写 player.position 为农场屋门口
+    // 8 体力/生命 + 熬夜晕倒金钱惩罚（矿洞 HP=0 晕倒走 MineScene 即时路径，不经此处）
+    ServiceLocator.get<EnergySystem>(SYS.energy).restoreOnSleep();
+    if (faintContext === 'farm') {
+      ServiceLocator.get<EconomySystem>(SYS.economy).applyFaintPenalty('farm');
     }
     // 9 每日/每周重置 + NPC 日程
     ServiceLocator.get<RelationshipSystem>(SYS.relationship).dailyReset(isNewWeek(t.day));

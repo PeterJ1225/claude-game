@@ -13,6 +13,8 @@ import { RelationshipSystem } from './RelationshipSystem';
 import { InteractionSystem } from './InteractionSystem';
 import { DialogSystem } from './DialogSystem';
 import { NPCSystem } from './NPCSystem';
+import { MiningSystem } from './MiningSystem';
+import { CombatSystem } from './CombatSystem';
 
 let done = false;
 
@@ -31,5 +33,7 @@ export function setupSystems(): void {
   ServiceLocator.register(SYS.interaction, new InteractionSystem());
   ServiceLocator.register(SYS.dialog, new DialogSystem());
   ServiceLocator.register(SYS.npc, new NPCSystem());
+  ServiceLocator.register(SYS.mining, new MiningSystem());
+  ServiceLocator.register(SYS.combat, new CombatSystem());
   done = true;
 }

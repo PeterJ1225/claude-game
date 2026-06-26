@@ -5,6 +5,7 @@ export class TownScene extends WorldScene {
   protected readonly mapKey = 'town';
   private shopZone!: Phaser.Geom.Rectangle;
   private blacksmithZone!: Phaser.Geom.Rectangle;
+  private mineZone!: Phaser.Geom.Rectangle;
 
   constructor() {
     super('Town');
@@ -13,6 +14,7 @@ export class TownScene extends WorldScene {
   protected onSetup(): void {
     this.shopZone = this.zoneFor('shop', new Phaser.Geom.Rectangle(96, 96, 48, 48), '种子店 (E)', 0x6b4f8a);
     this.blacksmithZone = this.zoneFor('blacksmith', new Phaser.Geom.Rectangle(380, 128, 48, 24), '铁匠铺 (E)', 0xc0612a);
+    this.mineZone = this.zoneFor('mine', new Phaser.Geom.Rectangle(450, 108, 48, 24), '矿洞 (E)', 0x4a4a5a);
   }
 
   private zoneFor(name: string, fallback: Phaser.Geom.Rectangle, label: string, color: number): Phaser.Geom.Rectangle {
@@ -33,6 +35,10 @@ export class TownScene extends WorldScene {
     }
     if (Phaser.Geom.Rectangle.Contains(this.blacksmithZone, this.player.x, this.player.y)) {
       this.openOverlay('BlacksmithOverlay', { parentScene: 'Town' });
+      return true;
+    }
+    if (Phaser.Geom.Rectangle.Contains(this.mineZone, this.player.x, this.player.y)) {
+      this.scene.start('Mine', { floor: 1 });
       return true;
     }
     return false;

@@ -7,6 +7,7 @@ export const ITEMS: ItemDef[] = [
   { id: 'wateringCan', name: '水壶', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_can', description: '浇水。升级后容量更大、范围更广。' },
   { id: 'pickaxe', name: '镐', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_pick', description: '采矿、碎石。' },
   { id: 'axe', name: '斧', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_axe', description: '砍树。' },
+  { id: 'sword', name: '剑', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_sword', description: '矿洞战斗武器。' },
 
   // 种子
   { id: 'parsnip_seeds', name: '防风草种子', category: 'seed', sellPrice: 10, stackable: true, maxStack: 999, iconKey: 'icon_seed_parsnip', description: '春季，4 天成熟。' },
@@ -25,6 +26,8 @@ export const ITEMS: ItemDef[] = [
   { id: 'corn', name: '玉米', category: 'crop', sellPrice: 50, stackable: true, maxStack: 999, iconKey: 'icon_corn', description: '夏秋多次收获。' },
 
   // 矿石/材料（M3 工具升级用；M5 起由采矿掉落，M3 由商店/调试给予）
+  { id: 'stone', name: '石头', category: 'material', sellPrice: 2, stackable: true, maxStack: 999, iconKey: 'icon_stone', description: '采矿副产。' },
+  { id: 'coal', name: '煤炭', category: 'material', sellPrice: 15, stackable: true, maxStack: 999, iconKey: 'icon_coal', description: '燃料/材料。' },
   { id: 'copper_ore', name: '铜矿', category: 'ore', sellPrice: 5, stackable: true, maxStack: 999, iconKey: 'icon_copper', description: '工具升级材料。' },
   { id: 'iron_ore', name: '铁矿', category: 'ore', sellPrice: 10, stackable: true, maxStack: 999, iconKey: 'icon_iron', description: '工具升级材料。' },
   { id: 'gold_ore', name: '金矿', category: 'ore', sellPrice: 25, stackable: true, maxStack: 999, iconKey: 'icon_gold', description: '工具升级材料。' },

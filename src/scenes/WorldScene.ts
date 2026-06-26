@@ -78,8 +78,10 @@ export abstract class WorldScene extends Phaser.Scene {
   private night!: Phaser.GameObjects.Rectangle;
   private teleports: Teleport[] = [];
   private teleportCd = 0;
-  private busy = false; // 睡觉/传送过场中
+  protected busy = false; // 睡觉/传送过场中
   protected canFarm = false; // 仅农场可锄地/浇水/播种（子类覆盖）
+  protected showWeather = true; // 矿洞地下无天气
+  protected useDayNight = true; // 矿洞恒暗，不随时间变亮
   private weatherFx?: Phaser.GameObjects.Particles.ParticleEmitter;
   private readonly onWeatherChanged = (): void => this.updateWeather();
   private npcViews = new Map<string, Phaser.GameObjects.Container>();
@@ -135,10 +137,12 @@ export abstract class WorldScene extends Phaser.Scene {
       .setOrigin(0)
       .setScrollFactor(0)
       .setDepth(50)
-      .setAlpha(nightAlpha(GameState.data.time.minute));
+      .setAlpha(this.useDayNight ? nightAlpha(GameState.data.time.minute) : 0.35);
 
-    this.updateWeather();
-    EventBus.on('weather:changed', this.onWeatherChanged);
+    if (this.showWeather) {
+      this.updateWeather();
+      EventBus.on('weather:changed', this.onWeatherChanged);
+    }
 
     this.setupInput();
     this.onSetup();
@@ -165,6 +169,14 @@ export abstract class WorldScene extends Phaser.Scene {
   protected onSetup(): void {}
   protected onInteract(): boolean {
     return false;
+  }
+  // 子类自定义「主操作键」用途（矿洞：镐采矿/剑战斗）。返回 true 表示已处理。
+  protected onUseTool(): boolean {
+    return false;
+  }
+  // 到 02:00 强制晕倒：默认农场口径；子类（矿洞）可覆写。
+  protected onDayTimeout(): void {
+    void this.sleep('farm');
   }
 
   private resolveSpawn(data: SpawnData | undefined, map: Phaser.Tilemaps.Tilemap): { x: number; y: number } {
@@ -204,6 +216,10 @@ export abstract class WorldScene extends Phaser.Scene {
     return ServiceLocator.get<InventorySystem>(SYS.inventory);
   }
 
+  protected facing(): Facing {
+    return this.player.facing;
+  }
+
   protected facingTile(): { tx: number; ty: number } {
     const [ox, oy] = FACE_OFFSET[this.player.facing];
     return { tx: pixelToTile(this.player.x) + ox, ty: pixelToTile(this.player.y) + oy };
@@ -217,6 +233,7 @@ export abstract class WorldScene extends Phaser.Scene {
       this.giftTo(npcId, slot.itemId); // 对 NPC 用手持物 = 送礼
       return;
     }
+    if (this.onUseTool()) return; // 子类自定义工具用途（矿洞：镐采矿/剑战斗）
     if (!this.canFarm) return; // 农场外不耕作
     const { tx, ty } = this.facingTile();
     ServiceLocator.get<InteractionSystem>(SYS.interaction).useSelectedOn(tx, ty, this.player.facing);
@@ -320,7 +337,7 @@ export abstract class WorldScene extends Phaser.Scene {
     this.player.move(dx, dy);
 
     ServiceLocator.get<TimeSystem>(SYS.time).update(delta);
-    this.night.setAlpha(nightAlpha(GameState.data.time.minute));
+    if (this.useDayNight) this.night.setAlpha(nightAlpha(GameState.data.time.minute));
     this.updateNPCs();
 
     if (this.teleportCd > 0) this.teleportCd -= delta;
@@ -333,7 +350,7 @@ export abstract class WorldScene extends Phaser.Scene {
       }
     }
 
-    if (GameState.data.time.minute >= DAY_END_MINUTE) void this.sleep('farm');
+    if (GameState.data.time.minute >= DAY_END_MINUTE) this.onDayTimeout();
   }
 
   private isDown(actions: readonly string[]): boolean {

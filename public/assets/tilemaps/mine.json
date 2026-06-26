@@ -1,0 +1,112 @@
+{
+    "compressionlevel":  -1,
+    "width":  40,
+    "height":  23,
+    "tilewidth":  16,
+    "tileheight":  16,
+    "orientation":  "orthogonal",
+    "renderorder":  "right-down",
+    "infinite":  false,
+    "type":  "map",
+    "version":  "1.10",
+    "tiledversion":  "1.10.2",
+    "nextlayerid":  3,
+    "nextobjectid":  99,
+    "tilesets":  [
+                     {
+                         "firstgid":  1,
+                         "name":  "tiles",
+                         "tilewidth":  16,
+                         "tileheight":  16,
+                         "tilecount":  1,
+                         "columns":  1,
+                         "image":  "tiles.png",
+                         "imagewidth":  16,
+                         "imageheight":  16,
+                         "margin":  0,
+                         "spacing":  0
+                     }
+                 ],
+    "layers":  [
+                   {
+                       "id":  1,
+                       "name":  "Collision",
+                       "type":  "objectgroup",
+                       "opacity":  1,
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0,
+                       "draworder":  "topdown",
+                       "objects":  [
+                                       {
+                                           "id":  1,
+                                           "name":  "wall",
+                                           "type":  "",
+                                           "x":  0,
+                                           "y":  0,
+                                           "width":  640,
+                                           "height":  16,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  2,
+                                           "name":  "wall",
+                                           "type":  "",
+                                           "x":  0,
+                                           "y":  352,
+                                           "width":  640,
+                                           "height":  16,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  3,
+                                           "name":  "wall",
+                                           "type":  "",
+                                           "x":  0,
+                                           "y":  0,
+                                           "width":  16,
+                                           "height":  368,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  4,
+                                           "name":  "wall",
+                                           "type":  "",
+                                           "x":  624,
+                                           "y":  0,
+                                           "width":  16,
+                                           "height":  368,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       }
+                                   ]
+                   },
+                   {
+                       "id":  2,
+                       "name":  "Objects",
+                       "type":  "objectgroup",
+                       "opacity":  1,
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0,
+                       "draworder":  "topdown",
+                       "objects":  [
+                                       {
+                                           "id":  20,
+                                           "name":  "spawn",
+                                           "type":  "",
+                                           "x":  320,
+                                           "y":  320,
+                                           "width":  0,
+                                           "height":  0,
+                                           "rotation":  0,
+                                           "visible":  true,
+                                           "point":  true
+                                       }
+                                   ]
+                   }
+               ]
+}

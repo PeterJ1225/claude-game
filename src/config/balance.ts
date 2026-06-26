@@ -59,6 +59,14 @@ export function skillXpForLevel(level: number): number {
 }
 export const MAX_SKILL_LEVEL = 10;
 
+// 战斗（SPEC 附录A）
+export const SWORD_BASE_DAMAGE = 8;
+export const SWORD_TIER_BONUS = 6; // 每档 +6
+export const COMBAT_DAMAGE_VARIANCE = 0.15;
+export const COMBAT_XP_KILL = 6;
+export const MINING_XP_NODE = 6;
+export const MINE_ELEVATOR_INTERVAL = 5; // 每 5 层一个存点/电梯
+
 // 工具升级（M3：金币 + 天数；材料 M5 起补）
 export const TOOL_TIER_ORDER: ToolTier[] = ['basic', 'copper', 'iron', 'gold', 'iridium'];
 export const TOOL_UPGRADE_DAYS = 2;

@@ -1047,6 +1047,17 @@
                                            "height":  48,
                                            "rotation":  0,
                                            "visible":  true
+                                       },
+                                       {
+                                           "id":  8,
+                                           "name":  "mine_building",
+                                           "type":  "",
+                                           "x":  450,
+                                           "y":  60,
+                                           "width":  48,
+                                           "height":  48,
+                                           "rotation":  0,
+                                           "visible":  true
                                        }
                                    ]
                    },
@@ -1117,6 +1128,17 @@
                                            "type":  "",
                                            "x":  380,
                                            "y":  128,
+                                           "width":  48,
+                                           "height":  24,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  24,
+                                           "name":  "mine",
+                                           "type":  "",
+                                           "x":  450,
+                                           "y":  108,
                                            "width":  48,
                                            "height":  24,
                                            "rotation":  0,

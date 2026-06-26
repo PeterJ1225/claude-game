@@ -23,6 +23,10 @@ export const FARM_SPAWN = { x: 320, y: 184 };
 export const FARM_BED = { x: 336, y: 160, w: 32, h: 16 };
 export const FARM_SHIPPING_BIN = { x: 272, y: 200, w: 24, h: 16 };
 
-// 地图瓦片尺寸（farm/town 均 40×23），用于耕作边界校验
+// 地图瓦片尺寸（farm/town/mine 均 40×23），用于耕作/采矿边界校验
 export const MAP_TILES_W = 40;
 export const MAP_TILES_H = 23;
+
+// 小镇矿洞入口（玩家从矿洞返回小镇的落点）
+export const TOWN_MINE_RETURN = { x: 474, y: 150 };
+export const FAINT_HP_FRACTION = 0.5; // 矿洞晕倒醒来恢复的 HP 比例

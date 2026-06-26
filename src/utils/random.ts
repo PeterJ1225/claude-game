@@ -31,11 +31,16 @@ function hashDomain(domain: string): number {
   return h;
 }
 
-// 域派生：(seed, domain, ...keys) -> [0,1)，纯函数、确定性、不依赖序列 state
-export function deriveValue(seed: number, domain: string, ...keys: number[]): number {
+// 域派生整数：(seed, domain, ...keys) -> uint32，纯函数、确定性
+export function deriveInt(seed: number, domain: string, ...keys: number[]): number {
   let h = splitmix32(seed ^ hashDomain(domain));
   for (const k of keys) {
     h = splitmix32(h ^ (k | 0));
   }
-  return h / 4294967296;
+  return h >>> 0;
+}
+
+// 域派生：(seed, domain, ...keys) -> [0,1)
+export function deriveValue(seed: number, domain: string, ...keys: number[]): number {
+  return deriveInt(seed, domain, ...keys) / 4294967296;
 }

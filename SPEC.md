@@ -941,6 +941,10 @@ export interface DialogueScript {
 | M4 | NPC 寻路用**线性插值(lerp)**向日程 waypoint 移动(非 A*);NPC 像素位置派生态(schedule+time 实时算,不入档) | M4 DoD 只需「按日程移动」;A* 留有 Collision 复杂场景再上 |
 | M4 | 对 NPC:`E`=对话(优先于开店/收获/睡觉),`空格`+手持非工具物=送礼;靠近 24px 判定 | 复用现有键,交互直观 |
 | M4 | 2 个 NPC(米拉/山姆),对话单文件 `data/dialogues.ts`;心事件 = `once` 节点(2 心触发、写 `event:*` flag、入 `consumedDialogueNodes` 防重触发) | M4 范围足够;对话量大再拆按 NPC 分文件 |
+| M5 | 矿层用 `deriveInt(seed,'mine',floor)` 域派生(重进同层布局相同);层内运行态(石/矿/怪)不入档,只持久 `mine.deepestLevel` | 符合 SPEC 5.8/RNG 约定 |
+| M5 | 矿洞晕倒(HP=0 或矿洞内 02:00)=**立即**送回农场(非过夜):扣钱 min(gold×0.1,500)+丢≤3 非工具物+恢复满血/半体力(按附录A);经 EnergySystem.faintMine() 不越权写 hp;补齐并删除 M3/M4 遗留的过夜 mine faint TODO/死分支 | 落地 DoD「HP 归零被送回并惩罚」;owner 合规 |
+| M5 | `mine.json` 无 Ground 层(暗相机背景);矿洞 `showWeather=false`/`useDayNight=false`(地下无天气、恒暗) | 复用 WorldScene,少建资源;矿洞氛围 |
+| M5 | 战斗:剑伤 base8+档位×6 ±15%,接触伤害 + 700ms 无敌帧;镐采矿单格(石→stone,矿脉→ore) | 符合附录 A;电梯/存点(每5层)留后续打磨 |
 
 ---
 

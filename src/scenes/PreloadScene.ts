@@ -10,6 +10,7 @@ export class PreloadScene extends Phaser.Scene {
     // 相对路径加载（base:'./'，SPEC 资源路径硬规范）
     this.load.tilemapTiledJSON('farm', 'assets/tilemaps/farm.json');
     this.load.tilemapTiledJSON('town', 'assets/tilemaps/town.json');
+    this.load.tilemapTiledJSON('mine', 'assets/tilemaps/mine.json');
 
     const t = this.add
       .text(this.scale.width / 2, this.scale.height / 2, '加载中…', {
@@ -45,6 +46,7 @@ export class PreloadScene extends Phaser.Scene {
       ['icon_can', 0x4a90d9],
       ['icon_pick', 0x9aa0a6],
       ['icon_axe', 0xc0612a],
+      ['icon_sword', 0xcfd8e8],
       ['icon_seed_parsnip', 0xcdae6b],
       ['icon_seed_greenbean', 0x88b04b],
       ['icon_seed_tomato', 0xd98c8c],
@@ -60,6 +62,8 @@ export class PreloadScene extends Phaser.Scene {
       ['icon_copper', 0xb87333],
       ['icon_iron', 0xbfc4c9],
       ['icon_gold', 0xffd451],
+      ['icon_stone', 0x8a8a8a],
+      ['icon_coal', 0x33333a],
     ];
     for (const [key, color] of icons) {
       g.fillStyle(0x000000, 0.25).fillRect(0, 0, 14, 14);

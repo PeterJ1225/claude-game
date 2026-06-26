@@ -1,6 +1,7 @@
 // 库存系统（SPEC 4.6 owner: inventory / hotbarSelectedIndex）。暴露受控同步方法。
 import { GameState } from '../save/GameState';
 import { EventBus } from '../core/EventBus';
+import { RandomService } from '../core/RandomService';
 import { HOTBAR_SIZE } from '../config/constants';
 import { getItem } from '../data/items';
 import type { InventorySlot } from '../types';
@@ -84,6 +85,25 @@ export class InventorySystem {
 
   setSelectedIndex(i: number): void {
     GameState.data.player.hotbarSelectedIndex = ((i % HOTBAR_SIZE) + HOTBAR_SIZE) % HOTBAR_SIZE;
+    EventBus.emit('inventory:changed', {});
+  }
+
+  // 随机丢失 ≤count 件非工具物品（矿洞晕倒惩罚，SPEC 附录A）
+  loseRandom(count: number): void {
+    const inv = this.inv;
+    const idxs: number[] = [];
+    for (let i = 0; i < inv.length; i++) {
+      const s = inv[i];
+      if (s && getItem(s.itemId).category !== 'tool') idxs.push(i);
+    }
+    for (let k = 0; k < count && idxs.length > 0; k++) {
+      const slotIdx = idxs.splice(RandomService.int(idxs.length), 1)[0];
+      const s = inv[slotIdx];
+      if (s) {
+        s.qty -= 1;
+        if (s.qty <= 0) inv[slotIdx] = null;
+      }
+    }
     EventBus.emit('inventory:changed', {});
   }
 

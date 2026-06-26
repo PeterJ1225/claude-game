@@ -29,6 +29,7 @@ export class UIScene extends Phaser.Scene {
   private goldText!: Phaser.GameObjects.Text;
   private energyFill!: Phaser.GameObjects.Rectangle;
   private energyText!: Phaser.GameObjects.Text;
+  private hpFill!: Phaser.GameObjects.Rectangle;
   private toastText!: Phaser.GameObjects.Text;
   private cells: Cell[] = [];
   private readonly unsubs: (() => void)[] = [];
@@ -63,6 +64,11 @@ export class UIScene extends Phaser.Scene {
       .text(DESIGN_WIDTH - 4, barY - 8, '', { fontSize: '7px', color: '#ffffff' })
       .setOrigin(1, 1);
 
+    // 血条（体力条上方）
+    const hpY = barY - 14;
+    this.add.rectangle(barX, hpY, barW, 6, 0x222222).setOrigin(0, 0.5);
+    this.hpFill = this.add.rectangle(barX, hpY, barW, 6, 0xd64550).setOrigin(0, 0.5);
+
     this.buildHotbar();
 
     this.toastText = this.add
@@ -79,6 +85,7 @@ export class UIScene extends Phaser.Scene {
     this.on('weather:changed', () => this.renderClock());
     this.on('economy:goldChanged', () => this.renderGold());
     this.on('player:energyChanged', () => this.renderEnergy());
+    this.on('player:hpChanged', () => this.renderHp());
     this.on('inventory:changed', () => this.renderHotbar());
     this.on('debug:toast', (p: EventMap['debug:toast']) => {
       this.toastText.setText(p.text);
@@ -92,7 +99,13 @@ export class UIScene extends Phaser.Scene {
     this.renderClock();
     this.renderGold();
     this.renderEnergy();
+    this.renderHp();
     this.renderHotbar();
+  }
+
+  private renderHp(): void {
+    const p = GameState.data.player;
+    this.hpFill.displayWidth = 70 * Math.max(0, Math.min(1, p.hp / p.maxHp));
   }
 
   private on<K extends keyof EventMap>(event: K, fn: (p: EventMap[K]) => void): void {

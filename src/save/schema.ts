@@ -26,8 +26,9 @@ export function createNewGame(seed: number, playerName = 'Player'): SaveData {
   inventory[1] = { itemId: 'wateringCan', qty: 1 };
   inventory[2] = { itemId: 'pickaxe', qty: 1 };
   inventory[3] = { itemId: 'axe', qty: 1 };
-  inventory[4] = { itemId: 'parsnip_seeds', qty: 15 };
-  inventory[5] = { itemId: 'greenbean_seeds', qty: 10 };
+  inventory[4] = { itemId: 'sword', qty: 1 };
+  inventory[5] = { itemId: 'parsnip_seeds', qty: 15 };
+  inventory[6] = { itemId: 'greenbean_seeds', qty: 10 };
 
   const skills: Record<SkillId, { level: number; xp: number }> = {
     farming: { level: 1, xp: 0 },
