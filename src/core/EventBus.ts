@@ -37,6 +37,14 @@ class EventBusClass {
     }
   }
 
+  // 监听器计数（性能/泄漏检查用：订阅数不应随天数增长）
+  listenerCount(event?: keyof EventMap): number {
+    if (event) return this.handlers.get(event)?.size ?? 0;
+    let n = 0;
+    for (const set of this.handlers.values()) n += set.size;
+    return n;
+  }
+
   // HMR / 单测隔离用
   reset(): void {
     this.handlers.clear();

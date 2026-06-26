@@ -16,4 +16,5 @@ export const SYS = {
   combat: 'combat',
   fishing: 'fishing',
   festival: 'festival',
+  settings: 'settings',
 } as const;

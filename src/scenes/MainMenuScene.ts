@@ -15,7 +15,7 @@ export class MainMenuScene extends Phaser.Scene {
   create(): void {
     const cx = this.scale.width / 2;
     this.add.text(cx, 56, '星露谷物语类游戏', { fontSize: '16px', color: '#ffe9a8' }).setOrigin(0.5);
-    this.add.text(cx, 78, '（M1 核心农场循环）', { fontSize: '8px', color: '#9fb0c0' }).setOrigin(0.5);
+    this.add.text(cx, 78, '四季农场 · 种植 · 社交 · 采矿 · 钓鱼 · 节日', { fontSize: '8px', color: '#9fb0c0' }).setOrigin(0.5);
 
     const start = this.add
       .text(cx, 134, '▶ 新游戏', {
@@ -35,7 +35,7 @@ export class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(cx, 238, 'Enter / 点击新游戏开始 · WASD 移动 · 空格用工具 · E 收获 · 床上 E 睡觉', {
+      .text(cx, 238, 'Enter / 点击新游戏开始 · WASD 移动 · 空格用工具 · E 收获/交互 · 床上 E 睡觉 · ESC 设置', {
         fontSize: '8px',
         color: '#7f8b98',
       })

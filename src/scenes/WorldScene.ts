@@ -18,6 +18,7 @@ import { ServiceLocator } from '../core/ServiceLocator';
 import { SYS } from '../systems/keys';
 import { getNPC } from '../data/npcs';
 import { getItem } from '../data/items';
+import { AudioManager } from '../audio/AudioManager';
 import type { Facing } from '../types';
 import type { TimeSystem } from '../systems/TimeSystem';
 import type { InventorySystem } from '../systems/InventorySystem';
@@ -145,6 +146,7 @@ export abstract class WorldScene extends Phaser.Scene {
     }
 
     this.setupInput();
+    AudioManager.applyFromSettings(); // 按存档音量设置音频
     this.onSetup();
     this.updateNPCs();
 
@@ -198,6 +200,7 @@ export abstract class WorldScene extends Phaser.Scene {
 
     kb.on('keydown-SPACE', () => this.useTool());
     kb.on('keydown-E', () => this.interact());
+    kb.on('keydown-ESC', () => this.openSettings());
     kb.on(`keydown-${CONTROLS.quickSave[0]}`, () => void this.quickSave());
     kb.on(`keydown-${CONTROLS.quickLoad[0]}`, () => void this.quickLoad());
     DIGIT_KEYS.forEach((name, i) => kb.on(`keydown-${name}`, () => this.inv().setSelectedIndex(i)));
@@ -249,6 +252,11 @@ export abstract class WorldScene extends Phaser.Scene {
     if (this.onInteract()) return;
     const { tx, ty } = this.facingTile();
     ServiceLocator.get<InteractionSystem>(SYS.interaction).interactOn(tx, ty);
+  }
+
+  private openSettings(): void {
+    if (this.busy) return;
+    this.openOverlay('SettingsOverlay', { parentScene: this.scene.key });
   }
 
   protected snapshotPlayer(): void {

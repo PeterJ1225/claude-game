@@ -957,6 +957,11 @@ export interface DialogueScript {
 | M7 | 更多心事件:米拉/山姆各加 4 心 once 节点(写 `event:<npc>:2`),列于 2 心节点之后→pickNode 取首个未消费命中,低阈值先触发 | 落地 M7 DoD「更多心事件」,进度递进 |
 | M7 | 节日活动用祈福摊(E 求签);奖励发金币走 EconomySystem.addGold | 轻量活动 + owner 合规(gold owner=EconomySystem) |
 | M7 | 多智能体审查(20 发现 + 对抗核实)后修 2 处真问题:① 祈福摊求签改 `Math.random`(原 `RandomService.int` 让可反复点击的 UI 污染入档序列 rng,违 6.9「序列随机限玩法时间线」且与 M6 鱼标抖动 ADR 矛盾;求签纯表现不入档);② 节日场景去掉 `useDayNight=false`(户外白天节日用日夜默认,活动时段 9–14 点全亮)。其余生命周期类发现(缺图层兜底/SHUTDOWN 快照/scrollFactor/交互分派/NPC 卡碰撞体)经对照 Phaser 真实行为均为假阳性 | 真问题修、假阳性不动;延续独立核实纪律 |
+| M8 | 设置菜单(`ESC` 暂停打开):音量±/全屏/语言/键位说明,写 `GameState.settings` 随档存;新增 `SettingsSystem` 为 `settings.*` owner | 落地 SPEC 5.12「设置」;owner 合规 |
+| M8 | 音频用 Web Audio API **程序化合成** SFX(`audio/AudioManager` 表现层单例,订阅 EventBus 收获/得金/升级/新天),无二进制素材;BGM 音量已接线但音轨待 CC0 整合;不支持/异常一律静默不崩 | 无素材依赖下交付「音频」且绝不崩;真实 CC0 留后续(`CREDITS.md` 登记) |
+| M8 | `EventBus` 加 `listenerCount()`;单测验证连续过夜 10 天订阅数不增长;场景 `SHUTDOWN` 注销全部订阅 | 落地 M8 DoD「10 游戏日无监听器泄漏」(可证伪) |
+| M8 | 数值平衡:通读附录 A 后保留为可玩基线(未改);打包:web `vite build` 已验证,桌面 `tauri build` 因本机无 Rust 仅文档化(同 M0.5),FPS 因无头环境未实测 | 无法实测处如实文档化,不虚报 DoD |
+| M8 | 多智能体审查(集成/生命周期/DoD 3 维 + 对抗核实)结论:0 真实问题。设置/音频/泄漏均经独立精读确认正确(ESC 互斥、AudioManager 幂等+无 ctx 静默、owner 合规、leak 测试可证伪) | 收官里程碑;延续独立核实纪律 |
 
 ---
 

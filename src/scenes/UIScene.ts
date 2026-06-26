@@ -4,6 +4,7 @@ import type { EventMap } from '../core/events';
 import { GameState } from '../save/GameState';
 import { getItem, hasItemDef } from '../data/items';
 import { formatTime, weekdayName } from '../utils/time';
+import { AudioManager } from '../audio/AudioManager';
 import { DESIGN_HEIGHT, DESIGN_WIDTH, HOTBAR_SIZE } from '../config/constants';
 
 const SEASON_CN: Record<string, string> = { spring: '春', summer: '夏', fall: '秋', winter: '冬' };
@@ -39,6 +40,7 @@ export class UIScene extends Phaser.Scene {
   }
 
   create(): void {
+    AudioManager.init(); // 程序化音频：建上下文 + 订阅事件（幂等）
     this.clockText = this.add.text(4, 4, '', {
       fontSize: '8px',
       color: '#ffffff',
