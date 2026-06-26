@@ -9,6 +9,7 @@ export class PreloadScene extends Phaser.Scene {
   preload(): void {
     // 相对路径加载（base:'./'，SPEC 资源路径硬规范）
     this.load.tilemapTiledJSON('farm', 'assets/tilemaps/farm.json');
+    this.load.tilemapTiledJSON('town', 'assets/tilemaps/town.json');
 
     const t = this.add
       .text(this.scale.width / 2, this.scale.height / 2, '加载中…', {

@@ -7,6 +7,7 @@ import type { InventorySystem } from './InventorySystem';
 import type { FarmSystem } from './FarmSystem';
 import type { CropSystem } from './CropSystem';
 import type { EnergySystem } from './EnergySystem';
+import type { EconomySystem } from './EconomySystem';
 
 export class InteractionSystem {
   // 主操作键：对朝向瓦片使用当前手持物
@@ -35,4 +36,18 @@ export class InteractionSystem {
   interactOn(tx: number, ty: number): boolean {
     return ServiceLocator.get<CropSystem>(SYS.crop).harvest(tx, ty);
   }
+
+  // 把当前选中格（非工具）整堆放入出货箱。返回是否成功。
+  shipSelected(): boolean {
+    const inv = ServiceLocator.get<InventorySystem>(SYS.inventory);
+    const slot = inv.selectedSlot();
+    if (!slot) return false;
+    if (getItem(slot.itemId).category === 'tool') return false;
+    const itemId = slot.itemId;
+    const qty = slot.qty;
+    if (!inv.removeItem(itemId, qty)) return false;
+    ServiceLocator.get<EconomySystem>(SYS.economy).addToShippingBin(itemId, qty);
+    return true;
+  }
 }
+

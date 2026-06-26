@@ -18,3 +18,7 @@ export const ZOOM = 3;
 
 // 农场出生点（createNewGame 初始位置与 FarmScene spawn 兜底共用，避免两处硬编码失配）
 export const FARM_SPAWN = { x: 320, y: 184 };
+
+// 农场床（睡觉点矩形）与出货箱（投放点矩形），世界像素坐标
+export const FARM_BED = { x: 336, y: 160, w: 32, h: 16 };
+export const FARM_SHIPPING_BIN = { x: 272, y: 200, w: 24, h: 16 };

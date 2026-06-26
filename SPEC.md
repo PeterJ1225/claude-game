@@ -928,6 +928,10 @@ export interface DialogueScript {
 | M1 | 各系统按 4.6 owner 实现为 ServiceLocator 注册的无状态单例,跨系统走 ServiceLocator + 受控同步/编排期结算方法 | 落地 4.6 通信模型;状态全在 GameState,系统可单测 |
 | M1 | 过夜结算的步 11 自动存档由睡觉编排者(FarmScene.sleep)在 processNewDay 后 await SaveSystem.save 完成 | save 是异步+注入存储,放场景编排;processNewDay 保持同步(步1–10) |
 | M1 | M1 农场无水源,水壶初始 40 次足够 DoD;补水(refillWateringCan 已备)留到有水源地图 | 不阻塞 M1 DoD,按里程碑推进 |
+| M2 | 抽 `WorldScene` 基类承载玩法逻辑(地图/玩家/输入/时间/昼夜/传送/睡觉/存档),Farm/Town 为薄子类 | 多场景复用,避免 FarmScene 逻辑重复;子类只填 onSetup/onInteract |
+| M2 | 传送数据驱动:Tiled `Objects` 层 `teleport` 矩形带 `targetScene/targetX/targetY` 属性,回程出生点避开对方传送区 + 400ms 冷却 | 符合 SPEC 4.4;防传送回弹 |
+| M2 | 卖出经"出货箱"(站箱前 E 投放选中堆→过夜第2步结算);买入经种子店浮层(`ShopOverlay`,暂停场景+时间) | 落地经济循环;overlay 暂停语义符合 4.3 |
+| M2 | 商店 `openHours` 字段 M2 暂不强制(随时可买);季节限定 stock 生效 | DoD 只需买卖跑通,营业时间约束留后续 |
 
 ---
 

@@ -997,7 +997,7 @@
                                            "id":  3,
                                            "name":  "wall",
                                            "type":  "",
-                                           "x":  0,
+                                           "x":  624,
                                            "y":  0,
                                            "width":  16,
                                            "height":  368,
@@ -1008,7 +1008,7 @@
                                            "id":  4,
                                            "name":  "wall",
                                            "type":  "",
-                                           "x":  624,
+                                           "x":  0,
                                            "y":  0,
                                            "width":  16,
                                            "height":  152,
@@ -1019,7 +1019,7 @@
                                            "id":  5,
                                            "name":  "wall",
                                            "type":  "",
-                                           "x":  624,
+                                           "x":  0,
                                            "y":  232,
                                            "width":  16,
                                            "height":  136,
@@ -1028,22 +1028,11 @@
                                        },
                                        {
                                            "id":  6,
-                                           "name":  "rock",
+                                           "name":  "shop_building",
                                            "type":  "",
-                                           "x":  160,
-                                           "y":  128,
-                                           "width":  48,
-                                           "height":  32,
-                                           "rotation":  0,
-                                           "visible":  true
-                                       },
-                                       {
-                                           "id":  7,
-                                           "name":  "rock",
-                                           "type":  "",
-                                           "x":  400,
-                                           "y":  224,
-                                           "width":  32,
+                                           "x":  200,
+                                           "y":  80,
+                                           "width":  64,
                                            "height":  48,
                                            "rotation":  0,
                                            "visible":  true
@@ -1064,7 +1053,7 @@
                                            "id":  20,
                                            "name":  "spawn",
                                            "type":  "",
-                                           "x":  320,
+                                           "x":  48,
                                            "y":  184,
                                            "width":  0,
                                            "height":  0,
@@ -1076,7 +1065,7 @@
                                            "id":  21,
                                            "name":  "teleport",
                                            "type":  "",
-                                           "x":  608,
+                                           "x":  8,
                                            "y":  160,
                                            "width":  24,
                                            "height":  64,
@@ -1086,12 +1075,12 @@
                                                               {
                                                                   "name":  "targetScene",
                                                                   "type":  "string",
-                                                                  "value":  "Town"
+                                                                  "value":  "Farm"
                                                               },
                                                               {
                                                                   "name":  "targetX",
                                                                   "type":  "int",
-                                                                  "value":  40
+                                                                  "value":  576
                                                               },
                                                               {
                                                                   "name":  "targetY",
@@ -1099,6 +1088,17 @@
                                                                   "value":  184
                                                               }
                                                           ]
+                                       },
+                                       {
+                                           "id":  22,
+                                           "name":  "shop",
+                                           "type":  "",
+                                           "x":  200,
+                                           "y":  128,
+                                           "width":  64,
+                                           "height":  24,
+                                           "rotation":  0,
+                                           "visible":  true
                                        }
                                    ]
                    }
