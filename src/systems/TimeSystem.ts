@@ -15,6 +15,7 @@ import type { ToolSystem } from './ToolSystem';
 import type { EnergySystem } from './EnergySystem';
 import type { RelationshipSystem } from './RelationshipSystem';
 import type { NPCSystem } from './NPCSystem';
+import type { FestivalSystem } from './FestivalSystem';
 
 const SEASONS: Season[] = ['spring', 'summer', 'fall', 'winter'];
 
@@ -72,9 +73,12 @@ export class TimeSystem {
     ServiceLocator.get<EconomySystem>(SYS.economy).settleShippingBin();
     // 3 换季清苗
     if (changedSeason) ServiceLocator.get<CropSystem>(SYS.crop).clearOutOfSeasonCrops(t.season);
-    // 4 掷次日天气（M1 无节日，故无节日强制晴覆盖）
-    t.weather = t.tomorrowWeather;
-    t.tomorrowWeather = this.rollWeather(t.season);
+    // 4 掷次日天气（节日当天强制晴，SPEC 4.5 步4 / 5.11）
+    const fest = ServiceLocator.get<FestivalSystem>(SYS.festival);
+    t.weather = fest.isFestivalOn(t.season, t.day) ? 'sunny' : t.tomorrowWeather;
+    const rolled = this.rollWeather(t.season); // 始终消耗一次 rng，保证序列稳定
+    const next = this.nextDate(t.season, t.day);
+    t.tomorrowWeather = fest.isFestivalOn(next.season, next.day) ? 'sunny' : rolled;
     // 5 降水自动浇水
     if (t.weather === 'rain' || t.weather === 'storm') {
       ServiceLocator.get<FarmSystem>(SYS.farm).waterAllTiles();
@@ -100,5 +104,12 @@ export class TimeSystem {
 
   private rollWeather(season: Season): Weather {
     return pickWeather(season, RandomService.next());
+  }
+
+  // 次一天的季节/日（用于判「次日是否节日」以强制晴）
+  private nextDate(season: Season, day: number): { season: Season; day: number } {
+    if (day < 28) return { season, day: day + 1 };
+    const idx = SEASONS.indexOf(season);
+    return { season: SEASONS[(idx + 1) % SEASONS.length], day: 1 };
   }
 }

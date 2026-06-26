@@ -74,6 +74,9 @@ export const FISHING_PROGRESS_GAIN = 0.55; // 命中时每秒进度
 export const FISHING_PROGRESS_LOSS = 0.4; // 脱靶时每秒进度
 export const FISHING_XP_CATCH = 10;
 
+// 节日（SPEC 5.11）：首次参加当年某节日发放的奖励金币
+export const FESTIVAL_ATTEND_REWARD = 300;
+
 // 工具升级（M3：金币 + 天数；材料 M5 起补）
 export const TOOL_TIER_ORDER: ToolTier[] = ['basic', 'copper', 'iron', 'gold', 'iridium'];
 export const TOOL_UPGRADE_DAYS = 2;

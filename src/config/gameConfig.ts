@@ -7,6 +7,7 @@ import { FarmScene } from '../scenes/FarmScene';
 import { TownScene } from '../scenes/TownScene';
 import { MineScene } from '../scenes/MineScene';
 import { BeachScene } from '../scenes/BeachScene';
+import { TownFestivalScene } from '../scenes/TownFestivalScene';
 import { UIScene } from '../scenes/UIScene';
 import { ShopOverlay } from '../scenes/overlays/ShopOverlay';
 import { BlacksmithOverlay } from '../scenes/overlays/BlacksmithOverlay';
@@ -26,5 +27,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, FarmScene, TownScene, MineScene, BeachScene, UIScene, ShopOverlay, BlacksmithOverlay, DialogOverlay, FishingOverlay],
+  scene: [BootScene, PreloadScene, MainMenuScene, FarmScene, TownScene, MineScene, BeachScene, TownFestivalScene, UIScene, ShopOverlay, BlacksmithOverlay, DialogOverlay, FishingOverlay],
 };

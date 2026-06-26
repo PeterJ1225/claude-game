@@ -12,6 +12,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('town', 'assets/tilemaps/town.json');
     this.load.tilemapTiledJSON('mine', 'assets/tilemaps/mine.json');
     this.load.tilemapTiledJSON('beach', 'assets/tilemaps/beach.json');
+    this.load.tilemapTiledJSON('town_festival', 'assets/tilemaps/town_festival.json');
 
     const t = this.add
       .text(this.scale.width / 2, this.scale.height / 2, '加载中…', {

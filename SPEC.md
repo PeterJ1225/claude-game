@@ -951,6 +951,12 @@ export interface DialogueScript {
 | M6 | 海滩从小镇东墙缺口(y160..208)自动传送进出;回程出生点(596/64)避开对方传送区 + 沿用 400ms 冷却 | 符合 SPEC 4.4 传送约定,防回弹 |
 | M6 | 鱼按 季节/天气/时段(连续 minute 360..1560)/地点 过滤;难度→鱼标速度与换向频率,钓鱼技能→绿条长度(上限0.6) | 落地 SPEC 5.9/6.5 与附录 A 映射;含"夏夜无鱼"等真实空池 |
 | M6 | 多智能体审查(集成/生命周期/玩法 3 维 + 对抗核实)结论:0 真实问题。唯一"confirmed"的 FishingOverlay ESC/space 监听泄漏经查 Phaser 3.80.1 `KeyboardPlugin.shutdown()`(removeAllListeners+removeAllKeys)证伪——keyboard 是每场景插件,scene.stop 自动清理,与其余 3 浮层同款写法 | 延续"独立核实、对照框架真实行为、不复述结论"纪律;假阳性不改代码 |
+| M7 | 4 节日(春13/夏11/秋16/冬25)固定日期,`TownFestival` 为节日变体场景(单独 town_festival.json、无 Ground 层绿底、程序绘摊位/灯笼/祈福摊);节日当天小镇广场显入口按 E 进场,西侧缺口传送回镇 | 落地 SPEC 5.11 与地图清单「town_festival.json」 |
+| M7 | 节日「整日」口径:节日当天(不限时段)NPC 经 NPCSystem.currentTarget 覆盖聚到节日场景固定点,Town 当天无人;参加奖励 300 金按 `festival:<id>:<year>` 一年一次(存档 flag,重载不重发,跨年可再参加) | 避免"进场却没人/错过时段"边界;对齐 SPEC 6.9 flag 含年口径 |
+| M7 | 过夜流水线步4 接入「当天或次日是节日→强制 sunny」并加 nextDate();rng 仍每天只掷一次(先 roll 再按节日覆盖) | 落地 SPEC 4.5 步4/5.11「节日强制晴」,不破坏读档可复现 |
+| M7 | 更多心事件:米拉/山姆各加 4 心 once 节点(写 `event:<npc>:2`),列于 2 心节点之后→pickNode 取首个未消费命中,低阈值先触发 | 落地 M7 DoD「更多心事件」,进度递进 |
+| M7 | 节日活动用祈福摊(E 求签);奖励发金币走 EconomySystem.addGold | 轻量活动 + owner 合规(gold owner=EconomySystem) |
+| M7 | 多智能体审查(20 发现 + 对抗核实)后修 2 处真问题:① 祈福摊求签改 `Math.random`(原 `RandomService.int` 让可反复点击的 UI 污染入档序列 rng,违 6.9「序列随机限玩法时间线」且与 M6 鱼标抖动 ADR 矛盾;求签纯表现不入档);② 节日场景去掉 `useDayNight=false`(户外白天节日用日夜默认,活动时段 9–14 点全亮)。其余生命周期类发现(缺图层兜底/SHUTDOWN 快照/scrollFactor/交互分派/NPC 卡碰撞体)经对照 Phaser 真实行为均为假阳性 | 真问题修、假阳性不动;延续独立核实纪律 |
 
 ---
 
