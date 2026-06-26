@@ -2,6 +2,7 @@
 import { GameState } from '../save/GameState';
 import { EventBus } from '../core/EventBus';
 import { tileKey } from '../utils/grid';
+import { MAP_TILES_H, MAP_TILES_W } from '../config/constants';
 import { WATERING_CAN_CAPACITY } from '../config/balance';
 
 export class FarmSystem {
@@ -9,11 +10,16 @@ export class FarmSystem {
     return GameState.data.farm.tiles;
   }
 
+  private inBounds(tx: number, ty: number): boolean {
+    return tx >= 0 && tx < MAP_TILES_W && ty >= 0 && ty < MAP_TILES_H;
+  }
+
   getTile(tx: number, ty: number) {
     return this.tiles()[tileKey(tx, ty)];
   }
 
   till(tx: number, ty: number): boolean {
+    if (!this.inBounds(tx, ty)) return false;
     const k = tileKey(tx, ty);
     const tiles = this.tiles();
     const existing = tiles[k];
@@ -24,6 +30,7 @@ export class FarmSystem {
   }
 
   water(tx: number, ty: number): boolean {
+    if (!this.inBounds(tx, ty)) return false;
     const tile = this.getTile(tx, ty);
     if (!tile || !tile.tilled || tile.watered) return false;
     const p = GameState.data.player;

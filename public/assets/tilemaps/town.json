@@ -1036,6 +1036,17 @@
                                            "height":  48,
                                            "rotation":  0,
                                            "visible":  true
+                                       },
+                                       {
+                                           "id":  7,
+                                           "name":  "smith_building",
+                                           "type":  "",
+                                           "x":  380,
+                                           "y":  80,
+                                           "width":  48,
+                                           "height":  48,
+                                           "rotation":  0,
+                                           "visible":  true
                                        }
                                    ]
                    },
@@ -1096,6 +1107,17 @@
                                            "x":  200,
                                            "y":  128,
                                            "width":  64,
+                                           "height":  24,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  23,
+                                           "name":  "blacksmith",
+                                           "type":  "",
+                                           "x":  380,
+                                           "y":  128,
+                                           "width":  48,
                                            "height":  24,
                                            "rotation":  0,
                                            "visible":  true

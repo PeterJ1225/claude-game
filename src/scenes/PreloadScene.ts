@@ -47,8 +47,19 @@ export class PreloadScene extends Phaser.Scene {
       ['icon_axe', 0xc0612a],
       ['icon_seed_parsnip', 0xcdae6b],
       ['icon_seed_greenbean', 0x88b04b],
+      ['icon_seed_tomato', 0xd98c8c],
+      ['icon_seed_melon', 0xe2b85e],
+      ['icon_seed_pumpkin', 0xd98032],
+      ['icon_seed_corn', 0xe8d36b],
       ['icon_parsnip', 0xe8d39a],
       ['icon_greenbean', 0x3fa34d],
+      ['icon_tomato', 0xe04b3a],
+      ['icon_melon', 0x4caf50],
+      ['icon_pumpkin', 0xe07b1a],
+      ['icon_corn', 0xf2d24b],
+      ['icon_copper', 0xb87333],
+      ['icon_iron', 0xbfc4c9],
+      ['icon_gold', 0xffd451],
     ];
     for (const [key, color] of icons) {
       g.fillStyle(0x000000, 0.25).fillRect(0, 0, 14, 14);
@@ -56,6 +67,15 @@ export class PreloadScene extends Phaser.Scene {
       g.generateTexture(key, 14, 14);
       g.clear();
     }
+
+    // 天气粒子纹理
+    g.fillStyle(0x9fc6e8, 1).fillRect(0, 0, 1, 5);
+    g.generateTexture('raindrop', 1, 5);
+    g.clear();
+    g.fillStyle(0xffffff, 1).fillRect(0, 0, 2, 2);
+    g.generateTexture('snowflake', 2, 2);
+    g.clear();
+
     g.destroy();
   }
 }

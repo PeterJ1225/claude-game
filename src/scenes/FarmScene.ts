@@ -9,6 +9,7 @@ import type { InteractionSystem } from '../systems/InteractionSystem';
 
 export class FarmScene extends WorldScene {
   protected readonly mapKey = 'farm';
+  protected canFarm = true;
   private bed!: Phaser.Geom.Rectangle;
   private bin!: Phaser.Geom.Rectangle;
 

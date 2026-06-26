@@ -58,3 +58,22 @@ export function skillXpForLevel(level: number): number {
   return level * level * 100;
 }
 export const MAX_SKILL_LEVEL = 10;
+
+// 工具升级（M3：金币 + 天数；材料 M5 起补）
+export const TOOL_TIER_ORDER: ToolTier[] = ['basic', 'copper', 'iron', 'gold', 'iridium'];
+export const TOOL_UPGRADE_DAYS = 2;
+export const TOOL_UPGRADE_COST: Record<Exclude<ToolTier, 'basic'>, number> = {
+  copper: 500,
+  iron: 1500,
+  gold: 4000,
+  iridium: 10000,
+};
+
+// 工具作用范围：朝向方向的直线瓦片数（按档位）。锄头/水壶用。
+export const TOOL_AOE_LENGTH: Record<ToolTier, number> = {
+  basic: 1,
+  copper: 3,
+  iron: 5,
+  gold: 7,
+  iridium: 9,
+};

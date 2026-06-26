@@ -1,17 +1,26 @@
 // 交互编排者（SPEC 4.6 编排者模式）：用户动作 → 检查体力 → 改 owner 状态 → 广播。
 import { ServiceLocator } from '../core/ServiceLocator';
+import { GameState } from '../save/GameState';
 import { getItem } from '../data/items';
-import { ENERGY_COST } from '../config/balance';
+import { ENERGY_COST, TOOL_AOE_LENGTH } from '../config/balance';
 import { SYS } from './keys';
+import type { Facing } from '../types';
 import type { InventorySystem } from './InventorySystem';
 import type { FarmSystem } from './FarmSystem';
 import type { CropSystem } from './CropSystem';
 import type { EnergySystem } from './EnergySystem';
 import type { EconomySystem } from './EconomySystem';
 
+const FACE_OFFSET: Record<Facing, [number, number]> = {
+  up: [0, -1],
+  down: [0, 1],
+  left: [-1, 0],
+  right: [1, 0],
+};
+
 export class InteractionSystem {
-  // 主操作键：对朝向瓦片使用当前手持物
-  useSelectedOn(tx: number, ty: number): void {
+  // 主操作键：对朝向瓦片（按工具档位扩展为一条直线）使用当前手持物
+  useSelectedOn(tx: number, ty: number, facing: Facing): void {
     const inv = ServiceLocator.get<InventorySystem>(SYS.inventory);
     const slot = inv.selectedSlot();
     if (!slot) return;
@@ -21,18 +30,26 @@ export class InteractionSystem {
     const energy = ServiceLocator.get<EnergySystem>(SYS.energy);
 
     if (def.category === 'tool') {
-      if (slot.itemId === 'hoe') {
-        if (farm.till(tx, ty)) energy.trySpend(ENERGY_COST.hoe);
-      } else if (slot.itemId === 'wateringCan') {
-        if (farm.water(tx, ty)) energy.trySpend(ENERGY_COST.water);
+      if (slot.itemId === 'hoe' || slot.itemId === 'wateringCan') {
+        const len = TOOL_AOE_LENGTH[GameState.data.player.tools[slot.itemId]];
+        const [ox, oy] = FACE_OFFSET[facing];
+        let affected = false;
+        for (let i = 0; i < len; i++) {
+          const x = tx + ox * i;
+          const y = ty + oy * i;
+          const ok = slot.itemId === 'hoe' ? farm.till(x, y) : farm.water(x, y);
+          if (ok) affected = true;
+        }
+        // 一次挥动算一次动作，只扣一次体力（SPEC 5.1 口径，避免高档工具低体力暴扣 HP）
+        if (affected) energy.trySpend(slot.itemId === 'hoe' ? ENERGY_COST.hoe : ENERGY_COST.water);
       }
-      // pickaxe/axe：M1 农场无可采/可砍对象，暂为 no-op
+      // pickaxe/axe：农场无可采/可砍对象，M5+ 处理
     } else if (def.category === 'seed') {
       if (crop.plant(tx, ty, slot.itemId)) inv.consumeSelectedOne();
     }
   }
 
-  // 交互键：对朝向瓦片做交互（M1：收获成熟作物）。返回是否发生了交互。
+  // 交互键：对朝向瓦片做交互（收获成熟作物）。返回是否发生了交互。
   interactOn(tx: number, ty: number): boolean {
     return ServiceLocator.get<CropSystem>(SYS.crop).harvest(tx, ty);
   }
@@ -50,4 +67,3 @@ export class InteractionSystem {
     return true;
   }
 }
-

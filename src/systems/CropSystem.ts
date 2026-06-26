@@ -92,12 +92,14 @@ export class CropSystem {
     EventBus.emit('farm:bulkChanged', {});
   }
 
-  // 过夜结算方法（SPEC 4.5 步 3）
+  // 过夜结算方法（SPEC 4.5 步 3）：移除「不在新季 seasons 内、且非再生」的作物，再生作物豁免保留
   clearOutOfSeasonCrops(season: Season): void {
     const tiles = this.tiles();
     for (const k in tiles) {
       const tile = tiles[k];
-      if (tile.crop && !getCrop(tile.crop.cropId).seasons.includes(season)) {
+      if (!tile.crop) continue;
+      const def = getCrop(tile.crop.cropId);
+      if (!def.seasons.includes(season) && def.regrowDays === undefined) {
         tile.crop = undefined;
       }
     }

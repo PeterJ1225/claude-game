@@ -66,6 +66,9 @@ export abstract class WorldScene extends Phaser.Scene {
   private teleports: Teleport[] = [];
   private teleportCd = 0;
   private busy = false; // 睡觉/传送过场中
+  protected canFarm = false; // 仅农场可锄地/浇水/播种（子类覆盖）
+  private weatherFx?: Phaser.GameObjects.Particles.ParticleEmitter;
+  private readonly onWeatherChanged = (): void => this.updateWeather();
 
   create(data?: SpawnData): void {
     setupSystems();
@@ -120,6 +123,9 @@ export abstract class WorldScene extends Phaser.Scene {
       .setDepth(50)
       .setAlpha(nightAlpha(GameState.data.time.minute));
 
+    this.updateWeather();
+    EventBus.on('weather:changed', this.onWeatherChanged);
+
     this.setupInput();
     this.onSetup();
 
@@ -128,6 +134,8 @@ export abstract class WorldScene extends Phaser.Scene {
       this.saveSystem = new SaveSystem(s);
     });
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
+      EventBus.off('weather:changed', this.onWeatherChanged);
+      this.weatherFx?.destroy();
       // 主动切场景（传送/睡觉/跨场景读档）已把权威 position 写入 GameState，过场期跳过二次快照
       if (!this.busy) this.snapshotPlayer();
     });
@@ -185,9 +193,9 @@ export abstract class WorldScene extends Phaser.Scene {
   }
 
   private useTool(): void {
-    if (this.busy) return;
+    if (this.busy || !this.canFarm) return; // 农场外不耕作
     const { tx, ty } = this.facingTile();
-    ServiceLocator.get<InteractionSystem>(SYS.interaction).useSelectedOn(tx, ty);
+    ServiceLocator.get<InteractionSystem>(SYS.interaction).useSelectedOn(tx, ty, this.player.facing);
   }
 
   private interact(): void {
@@ -300,5 +308,35 @@ export abstract class WorldScene extends Phaser.Scene {
 
   private isDown(actions: readonly string[]): boolean {
     return actions.some((k) => this.keys[k]?.isDown ?? false);
+  }
+
+  private updateWeather(): void {
+    this.weatherFx?.destroy();
+    this.weatherFx = undefined;
+    const w = GameState.data.time.weather;
+    if (w === 'rain' || w === 'storm') {
+      this.weatherFx = this.add.particles(0, 0, 'raindrop', {
+        x: { min: 0, max: DESIGN_WIDTH },
+        y: -6,
+        lifespan: 800,
+        speedY: { min: 300, max: 380 },
+        speedX: { min: -60, max: -30 },
+        quantity: w === 'storm' ? 6 : 3,
+        frequency: 22,
+        alpha: 0.6,
+      });
+    } else if (w === 'snow') {
+      this.weatherFx = this.add.particles(0, 0, 'snowflake', {
+        x: { min: 0, max: DESIGN_WIDTH },
+        y: -6,
+        lifespan: 4000,
+        speedY: { min: 25, max: 55 },
+        speedX: { min: -15, max: 15 },
+        quantity: 2,
+        frequency: 60,
+        alpha: 0.85,
+      });
+    }
+    this.weatherFx?.setScrollFactor(0).setDepth(60);
   }
 }

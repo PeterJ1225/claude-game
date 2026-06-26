@@ -52,6 +52,18 @@ describe('TimeSystem 过夜结算流水线（SPEC 4.5）', () => {
     expect(GameState.data.farm.tiles['3,3'].crop).toBeUndefined();
   });
 
+  it('步3：换季清除非再生的非当季作物，再生作物豁免保留（SPEC 4.5 步3）', () => {
+    GameState.data.time.day = 28;
+    farm().till(2, 2);
+    crop().plant(2, 2, 'parsnip_seeds'); // 非再生
+    farm().till(3, 3);
+    crop().plant(3, 3, 'greenbean_seeds'); // 再生
+    time().processNewDay(); // → 夏季
+    expect(GameState.data.time.season).toBe('summer');
+    expect(GameState.data.farm.tiles['2,2'].crop).toBeUndefined();
+    expect(GameState.data.farm.tiles['3,3'].crop).toBeDefined();
+  });
+
   it('步8：正常睡觉恢复满体力与满血', () => {
     GameState.data.player.energy = 10;
     GameState.data.player.hp = 30;
