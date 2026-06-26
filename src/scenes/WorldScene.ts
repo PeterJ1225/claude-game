@@ -16,10 +16,23 @@ import { createSaveStorage } from '../save/storageFactory';
 import { setupSystems } from '../systems/setup';
 import { ServiceLocator } from '../core/ServiceLocator';
 import { SYS } from '../systems/keys';
+import { getNPC } from '../data/npcs';
+import { getItem } from '../data/items';
 import type { Facing } from '../types';
 import type { TimeSystem } from '../systems/TimeSystem';
 import type { InventorySystem } from '../systems/InventorySystem';
 import type { InteractionSystem } from '../systems/InteractionSystem';
+import type { NPCSystem } from '../systems/NPCSystem';
+import type { DialogSystem } from '../systems/DialogSystem';
+import type { RelationshipSystem } from '../systems/RelationshipSystem';
+
+const TASTE_REACT: Record<string, string> = {
+  love: '太喜欢了！',
+  like: '挺喜欢的，谢谢。',
+  neutral: '谢谢。',
+  dislike: '…我不太喜欢这个。',
+  hate: '我讨厌这个。',
+};
 
 const FACE_OFFSET: Record<Facing, [number, number]> = {
   up: [0, -1],
@@ -69,6 +82,7 @@ export abstract class WorldScene extends Phaser.Scene {
   protected canFarm = false; // 仅农场可锄地/浇水/播种（子类覆盖）
   private weatherFx?: Phaser.GameObjects.Particles.ParticleEmitter;
   private readonly onWeatherChanged = (): void => this.updateWeather();
+  private npcViews = new Map<string, Phaser.GameObjects.Container>();
 
   create(data?: SpawnData): void {
     setupSystems();
@@ -128,6 +142,7 @@ export abstract class WorldScene extends Phaser.Scene {
 
     this.setupInput();
     this.onSetup();
+    this.updateNPCs();
 
     if (!this.scene.isActive('UIScene')) this.scene.launch('UIScene');
     void createSaveStorage().then((s) => {
@@ -136,6 +151,8 @@ export abstract class WorldScene extends Phaser.Scene {
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       EventBus.off('weather:changed', this.onWeatherChanged);
       this.weatherFx?.destroy();
+      this.npcViews.forEach((v) => v.destroy());
+      this.npcViews.clear();
       // 主动切场景（传送/睡觉/跨场景读档）已把权威 position 写入 GameState，过场期跳过二次快照
       if (!this.busy) this.snapshotPlayer();
     });
@@ -193,13 +210,25 @@ export abstract class WorldScene extends Phaser.Scene {
   }
 
   private useTool(): void {
-    if (this.busy || !this.canFarm) return; // 农场外不耕作
+    if (this.busy) return;
+    const npcId = this.nearestNPC();
+    const slot = this.inv().selectedSlot();
+    if (npcId && slot && getItem(slot.itemId).category !== 'tool') {
+      this.giftTo(npcId, slot.itemId); // 对 NPC 用手持物 = 送礼
+      return;
+    }
+    if (!this.canFarm) return; // 农场外不耕作
     const { tx, ty } = this.facingTile();
     ServiceLocator.get<InteractionSystem>(SYS.interaction).useSelectedOn(tx, ty, this.player.facing);
   }
 
   private interact(): void {
     if (this.busy) return;
+    const npcId = this.nearestNPC();
+    if (npcId) {
+      this.talkTo(npcId); // 靠近 NPC 按 E = 对话
+      return;
+    }
     if (this.onInteract()) return;
     const { tx, ty } = this.facingTile();
     ServiceLocator.get<InteractionSystem>(SYS.interaction).interactOn(tx, ty);
@@ -292,6 +321,7 @@ export abstract class WorldScene extends Phaser.Scene {
 
     ServiceLocator.get<TimeSystem>(SYS.time).update(delta);
     this.night.setAlpha(nightAlpha(GameState.data.time.minute));
+    this.updateNPCs();
 
     if (this.teleportCd > 0) this.teleportCd -= delta;
     else {
@@ -308,6 +338,76 @@ export abstract class WorldScene extends Phaser.Scene {
 
   private isDown(actions: readonly string[]): boolean {
     return actions.some((k) => this.keys[k]?.isDown ?? false);
+  }
+
+  // 打开浮层（商店/铁匠/对话）：暂停玩法场景与时间（SPEC 4.3）
+  protected openOverlay(key: string, data: object): void {
+    ServiceLocator.get<TimeSystem>(SYS.time).setPaused(true);
+    this.input.enabled = false;
+    this.events.once(Phaser.Scenes.Events.RESUME, () => {
+      this.input.enabled = true;
+    });
+    this.scene.pause();
+    this.scene.launch(key, data);
+  }
+
+  private updateNPCs(): void {
+    const npcSys = ServiceLocator.get<NPCSystem>(SYS.npc);
+    const here = new Set(npcSys.idsInScene(this.scene.key));
+    for (const [id, v] of this.npcViews) {
+      if (!here.has(id)) {
+        v.destroy();
+        this.npcViews.delete(id);
+      }
+    }
+    for (const id of here) {
+      const t = npcSys.currentTarget(id);
+      const v = this.npcViews.get(id);
+      if (!v) {
+        this.npcViews.set(id, this.createNPCView(id, t.x, t.y));
+      } else {
+        v.x = Phaser.Math.Linear(v.x, t.x, 0.06);
+        v.y = Phaser.Math.Linear(v.y, t.y, 0.06);
+      }
+    }
+  }
+
+  private createNPCView(npcId: string, x: number, y: number): Phaser.GameObjects.Container {
+    const color = npcId === 'mira' ? 0xd987c0 : 0x6fa8dc;
+    const body = this.add.rectangle(0, 0, 12, 16, color).setStrokeStyle(1, 0x222222);
+    const label = this.add.text(0, -13, getNPC(npcId).name, { fontSize: '7px', color: '#ffffff' }).setOrigin(0.5);
+    return this.add.container(x, y, [body, label]).setDepth(4);
+  }
+
+  private nearestNPC(): string | null {
+    for (const [id, v] of this.npcViews) {
+      if (Phaser.Math.Distance.Between(v.x, v.y, this.player.x, this.player.y) < 24) return id;
+    }
+    return null;
+  }
+
+  private talkTo(npcId: string): void {
+    const dialog = ServiceLocator.get<DialogSystem>(SYS.dialog);
+    const node = dialog.pickNode(npcId);
+    ServiceLocator.get<RelationshipSystem>(SYS.relationship).talk(npcId);
+    dialog.consume(npcId, node);
+    this.openOverlay('DialogOverlay', {
+      name: getNPC(npcId).name,
+      lines: node.lines.map((l) => l.text),
+      parentScene: this.scene.key,
+    });
+  }
+
+  private giftTo(npcId: string, itemId: string): void {
+    const rel = ServiceLocator.get<RelationshipSystem>(SYS.relationship);
+    if (!rel.canGift(npcId)) {
+      EventBus.emit('debug:toast', { text: `${getNPC(npcId).name} 这周已经收过礼物了` });
+      return;
+    }
+    const taste = rel.gift(npcId, itemId);
+    if (taste === null) return;
+    this.inv().consumeSelectedOne(); // 扣掉选中格 1 个（即送出的那件，避免误扣他格同名物）
+    EventBus.emit('debug:toast', { text: `${getNPC(npcId).name}：${TASTE_REACT[taste]}` });
   }
 
   private updateWeather(): void {

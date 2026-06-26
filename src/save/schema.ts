@@ -4,6 +4,7 @@ import { FARM_SPAWN, INVENTORY_SIZE } from '../config/constants';
 import { MAX_ENERGY, MAX_HP, START_GOLD, WATERING_CAN_CAPACITY } from '../config/balance';
 import { deriveValue } from '../utils/random';
 import { pickWeather } from '../systems/weather';
+import { NPCS } from '../data/npcs';
 
 // 首个实现版本。规格期演进（v2→v2.2）发生在编码前，无历史存档、无需迁移；
 // 迁移机制用于首发之后的结构变更：改 SaveData 结构 → ++ + 写 migrate 分支 + 测试。
@@ -65,7 +66,9 @@ export function createNewGame(seed: number, playerName = 'Player'): SaveData {
     shippingBin: [],
     toolUpgrades: [],
     chests: {},
-    relationships: {},
+    relationships: Object.fromEntries(
+      NPCS.map((n) => [n.id, { points: 0, met: false, talkedToday: false, giftsThisWeek: 0 }]),
+    ),
     unlocked: { recipes: [], shops: ['seedShop'] },
     mine: { deepestLevel: 0 },
     consumedDialogueNodes: [],

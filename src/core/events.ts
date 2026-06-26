@@ -16,6 +16,7 @@ export interface EventMap {
   'farm:tileChanged': { tx: number; ty: number };
   'farm:bulkChanged': Record<string, never>;
   'skill:levelUp': { skill: string; level: number };
+  'npc:relationshipChanged': { npcId: string; hearts: number };
   // M0/M0.5 调试事件（仅供 UIScene 演示事件总线链路）
   'debug:playerMoved': { x: number; y: number };
   'debug:toast': { text: string };

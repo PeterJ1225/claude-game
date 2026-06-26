@@ -1,8 +1,5 @@
 import Phaser from 'phaser';
 import { WorldScene } from './WorldScene';
-import { ServiceLocator } from '../core/ServiceLocator';
-import { SYS } from '../systems/keys';
-import type { TimeSystem } from '../systems/TimeSystem';
 
 export class TownScene extends WorldScene {
   protected readonly mapKey = 'town';
@@ -39,15 +36,5 @@ export class TownScene extends WorldScene {
       return true;
     }
     return false;
-  }
-
-  private openOverlay(key: string, data: object): void {
-    ServiceLocator.get<TimeSystem>(SYS.time).setPaused(true);
-    this.input.enabled = false; // 确保暂停期父场景不响应输入
-    this.events.once(Phaser.Scenes.Events.RESUME, () => {
-      this.input.enabled = true;
-    });
-    this.scene.pause();
-    this.scene.launch(key, data);
   }
 }

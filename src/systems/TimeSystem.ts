@@ -14,6 +14,7 @@ import type { FarmSystem } from './FarmSystem';
 import type { ToolSystem } from './ToolSystem';
 import type { EnergySystem } from './EnergySystem';
 import type { RelationshipSystem } from './RelationshipSystem';
+import type { NPCSystem } from './NPCSystem';
 
 const SEASONS: Season[] = ['spring', 'summer', 'fall', 'winter'];
 
@@ -91,6 +92,7 @@ export class TimeSystem {
     }
     // 9 每日/每周重置 + NPC 日程
     ServiceLocator.get<RelationshipSystem>(SYS.relationship).dailyReset(isNewWeek(t.day));
+    ServiceLocator.get<NPCSystem>(SYS.npc).resetDailySchedule();
     // 10 广播通知事件（仅供 UI/音频，禁写 GameState）
     EventBus.emit('time:newDay', { year: t.year, season: t.season, day: t.day });
     if (changedSeason) EventBus.emit('time:newSeason', { season: t.season });

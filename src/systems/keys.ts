@@ -10,4 +10,6 @@ export const SYS = {
   tool: 'tool',
   relationship: 'relationship',
   interaction: 'interaction',
+  dialog: 'dialog',
+  npc: 'npc',
 } as const;

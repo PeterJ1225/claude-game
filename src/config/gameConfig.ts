@@ -8,6 +8,7 @@ import { TownScene } from '../scenes/TownScene';
 import { UIScene } from '../scenes/UIScene';
 import { ShopOverlay } from '../scenes/overlays/ShopOverlay';
 import { BlacksmithOverlay } from '../scenes/overlays/BlacksmithOverlay';
+import { DialogOverlay } from '../scenes/overlays/DialogOverlay';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -22,5 +23,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, FarmScene, TownScene, UIScene, ShopOverlay, BlacksmithOverlay],
+  scene: [BootScene, PreloadScene, MainMenuScene, FarmScene, TownScene, UIScene, ShopOverlay, BlacksmithOverlay, DialogOverlay],
 };
