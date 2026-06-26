@@ -1000,7 +1000,18 @@
                                            "x":  624,
                                            "y":  0,
                                            "width":  16,
-                                           "height":  368,
+                                           "height":  160,
+                                           "rotation":  0,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "id":  9,
+                                           "name":  "wall",
+                                           "type":  "",
+                                           "x":  624,
+                                           "y":  208,
+                                           "width":  16,
+                                           "height":  160,
                                            "rotation":  0,
                                            "visible":  true
                                        },
@@ -1143,6 +1154,34 @@
                                            "height":  24,
                                            "rotation":  0,
                                            "visible":  true
+                                       },
+                                       {
+                                           "id":  25,
+                                           "name":  "teleport",
+                                           "type":  "",
+                                           "x":  600,
+                                           "y":  160,
+                                           "width":  32,
+                                           "height":  48,
+                                           "rotation":  0,
+                                           "visible":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "targetScene",
+                                                                  "type":  "string",
+                                                                  "value":  "Beach"
+                                                              },
+                                                              {
+                                                                  "name":  "targetX",
+                                                                  "type":  "int",
+                                                                  "value":  64
+                                                              },
+                                                              {
+                                                                  "name":  "targetY",
+                                                                  "type":  "int",
+                                                                  "value":  184
+                                                              }
+                                                          ]
                                        }
                                    ]
                    }

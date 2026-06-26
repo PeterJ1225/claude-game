@@ -945,6 +945,12 @@ export interface DialogueScript {
 | M5 | 矿洞晕倒(HP=0 或矿洞内 02:00)=**立即**送回农场(非过夜):扣钱 min(gold×0.1,500)+丢≤3 非工具物+恢复满血/半体力(按附录A);经 EnergySystem.faintMine() 不越权写 hp;补齐并删除 M3/M4 遗留的过夜 mine faint TODO/死分支 | 落地 DoD「HP 归零被送回并惩罚」;owner 合规 |
 | M5 | `mine.json` 无 Ground 层(暗相机背景);矿洞 `showWeather=false`/`useDayNight=false`(地下无天气、恒暗) | 复用 WorldScene,少建资源;矿洞氛围 |
 | M5 | 战斗:剑伤 base8+档位×6 ±15%,接触伤害 + 700ms 无敌帧;镐采矿单格(石→stone,矿脉→ore) | 符合附录 A;电梯/存点(每5层)留后续打磨 |
+| M6 | 钓鱼小游戏:抛竿→0.7s 等待咬钩→按住空格让绿条对准鱼标,进度满成功入库+10 钓鱼XP;结果只由操作+钓鱼技能决定 | 符合 SPEC 5.9;选鱼用 RandomService(可复现),判定不消耗 rng 序列,鱼标抖动用 Math.random(纯表现不入档) |
+| M6 | 钓竿作为不可堆叠工具物品(itemId=fishingRod)放进初始背包 inventory[5],种子顺延 [6][7] | 对照 M5 漏 sword 教训:工具要能用必须既有 ItemDef 又入初始背包,否则功能废掉 |
+| M6 | `beach.json` 无 Ground 层(沙色相机背景),海水用 BeachScene 画矩形 + Collision `water_edge` 墙挡住玩家;水边 60px 判定区且手持钓竿才触发 | 复用 mine 的"无瓦片+程序绘制"路子,少建资源 |
+| M6 | 海滩从小镇东墙缺口(y160..208)自动传送进出;回程出生点(596/64)避开对方传送区 + 沿用 400ms 冷却 | 符合 SPEC 4.4 传送约定,防回弹 |
+| M6 | 鱼按 季节/天气/时段(连续 minute 360..1560)/地点 过滤;难度→鱼标速度与换向频率,钓鱼技能→绿条长度(上限0.6) | 落地 SPEC 5.9/6.5 与附录 A 映射;含"夏夜无鱼"等真实空池 |
+| M6 | 多智能体审查(集成/生命周期/玩法 3 维 + 对抗核实)结论:0 真实问题。唯一"confirmed"的 FishingOverlay ESC/space 监听泄漏经查 Phaser 3.80.1 `KeyboardPlugin.shutdown()`(removeAllListeners+removeAllKeys)证伪——keyboard 是每场景插件,scene.stop 自动清理,与其余 3 浮层同款写法 | 延续"独立核实、对照框架真实行为、不复述结论"纪律;假阳性不改代码 |
 
 ---
 

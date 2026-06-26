@@ -15,6 +15,7 @@ import { DialogSystem } from './DialogSystem';
 import { NPCSystem } from './NPCSystem';
 import { MiningSystem } from './MiningSystem';
 import { CombatSystem } from './CombatSystem';
+import { FishingSystem } from './FishingSystem';
 
 let done = false;
 
@@ -35,5 +36,6 @@ export function setupSystems(): void {
   ServiceLocator.register(SYS.npc, new NPCSystem());
   ServiceLocator.register(SYS.mining, new MiningSystem());
   ServiceLocator.register(SYS.combat, new CombatSystem());
+  ServiceLocator.register(SYS.fishing, new FishingSystem());
   done = true;
 }

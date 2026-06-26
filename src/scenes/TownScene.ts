@@ -15,6 +15,9 @@ export class TownScene extends WorldScene {
     this.shopZone = this.zoneFor('shop', new Phaser.Geom.Rectangle(96, 96, 48, 48), '种子店 (E)', 0x6b4f8a);
     this.blacksmithZone = this.zoneFor('blacksmith', new Phaser.Geom.Rectangle(380, 128, 48, 24), '铁匠铺 (E)', 0xc0612a);
     this.mineZone = this.zoneFor('mine', new Phaser.Geom.Rectangle(450, 108, 48, 24), '矿洞 (E)', 0x4a4a5a);
+    // 海滩出口（东侧缺口，走进去自动传送）
+    this.add.rectangle(608, 160, 24, 48, 0x2f7ca5, 0.5).setOrigin(0).setDepth(2);
+    this.add.text(616, 152, '海滩 →', { fontSize: '8px', color: '#bfe6ff' }).setOrigin(0.5).setDepth(2);
   }
 
   private zoneFor(name: string, fallback: Phaser.Geom.Rectangle, label: string, color: number): Phaser.Geom.Rectangle {

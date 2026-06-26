@@ -67,6 +67,13 @@ export const COMBAT_XP_KILL = 6;
 export const MINING_XP_NODE = 6;
 export const MINE_ELEVATOR_INTERVAL = 5; // 每 5 层一个存点/电梯
 
+// 钓鱼小游戏（SPEC 附录A）
+export const FISHING_BAR_FRACTION = 0.34; // 绿条基础长度占比
+export const FISHING_SKILL_BONUS = 0.04; // 每级钓鱼 +4% 绿条
+export const FISHING_PROGRESS_GAIN = 0.55; // 命中时每秒进度
+export const FISHING_PROGRESS_LOSS = 0.4; // 脱靶时每秒进度
+export const FISHING_XP_CATCH = 10;
+
 // 工具升级（M3：金币 + 天数；材料 M5 起补）
 export const TOOL_TIER_ORDER: ToolTier[] = ['basic', 'copper', 'iron', 'gold', 'iridium'];
 export const TOOL_UPGRADE_DAYS = 2;

@@ -11,6 +11,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('farm', 'assets/tilemaps/farm.json');
     this.load.tilemapTiledJSON('town', 'assets/tilemaps/town.json');
     this.load.tilemapTiledJSON('mine', 'assets/tilemaps/mine.json');
+    this.load.tilemapTiledJSON('beach', 'assets/tilemaps/beach.json');
 
     const t = this.add
       .text(this.scale.width / 2, this.scale.height / 2, '加载中…', {
@@ -47,6 +48,11 @@ export class PreloadScene extends Phaser.Scene {
       ['icon_pick', 0x9aa0a6],
       ['icon_axe', 0xc0612a],
       ['icon_sword', 0xcfd8e8],
+      ['icon_rod', 0x8a6a40],
+      ['icon_sardine', 0x9bb0c4],
+      ['icon_anchovy', 0xb0c0a0],
+      ['icon_tuna', 0x5a8fb0],
+      ['icon_puffer', 0xe0b060],
       ['icon_seed_parsnip', 0xcdae6b],
       ['icon_seed_greenbean', 0x88b04b],
       ['icon_seed_tomato', 0xd98c8c],

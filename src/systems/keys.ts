@@ -14,4 +14,5 @@ export const SYS = {
   npc: 'npc',
   mining: 'mining',
   combat: 'combat',
+  fishing: 'fishing',
 } as const;

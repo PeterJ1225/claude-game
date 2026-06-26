@@ -17,8 +17,9 @@ describe('createNewGame', () => {
     expect(save.inventory[0]).toEqual({ itemId: 'hoe', qty: 1 });
     expect(save.inventory[1]).toEqual({ itemId: 'wateringCan', qty: 1 });
     expect(save.inventory[4]).toEqual({ itemId: 'sword', qty: 1 });
-    expect(save.inventory[5]).toEqual({ itemId: 'parsnip_seeds', qty: 15 });
-    expect(save.inventory[7]).toBeNull();
+    expect(save.inventory[5]).toEqual({ itemId: 'fishingRod', qty: 1 });
+    expect(save.inventory[6]).toEqual({ itemId: 'parsnip_seeds', qty: 15 });
+    expect(save.inventory[8]).toBeNull();
   });
 
   it('player.tools 为 Record 形状、四基础工具 basic 档', () => {

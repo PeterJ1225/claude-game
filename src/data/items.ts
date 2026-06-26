@@ -8,6 +8,13 @@ export const ITEMS: ItemDef[] = [
   { id: 'pickaxe', name: '镐', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_pick', description: '采矿、碎石。' },
   { id: 'axe', name: '斧', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_axe', description: '砍树。' },
   { id: 'sword', name: '剑', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_sword', description: '矿洞战斗武器。' },
+  { id: 'fishingRod', name: '钓竿', category: 'tool', sellPrice: 0, stackable: false, maxStack: 1, iconKey: 'icon_rod', description: '在水边钓鱼。' },
+
+  // 鱼
+  { id: 'sardine', name: '沙丁鱼', category: 'fish', sellPrice: 40, stackable: true, maxStack: 999, iconKey: 'icon_sardine', description: '常见小鱼。' },
+  { id: 'anchovy', name: '凤尾鱼', category: 'fish', sellPrice: 30, stackable: true, maxStack: 999, iconKey: 'icon_anchovy', description: '细长小鱼。' },
+  { id: 'tuna', name: '金枪鱼', category: 'fish', sellPrice: 100, stackable: true, maxStack: 999, iconKey: 'icon_tuna', description: '大型海鱼。' },
+  { id: 'pufferfish', name: '河豚', category: 'fish', sellPrice: 200, stackable: true, maxStack: 999, iconKey: 'icon_puffer', description: '稀有且难钓。' },
 
   // 种子
   { id: 'parsnip_seeds', name: '防风草种子', category: 'seed', sellPrice: 10, stackable: true, maxStack: 999, iconKey: 'icon_seed_parsnip', description: '春季，4 天成熟。' },
