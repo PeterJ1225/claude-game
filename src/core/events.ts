@@ -12,6 +12,10 @@ export interface EventMap {
   'player:hpChanged': { hp: number; max: number };
   'economy:goldChanged': { gold: number; delta: number };
   'crop:harvested': { cropId: string; qty: number; overflow: number };
+  // 农田变更（表现层据此重绘瓦片/作物）
+  'farm:tileChanged': { tx: number; ty: number };
+  'farm:bulkChanged': Record<string, never>;
+  'skill:levelUp': { skill: string; level: number };
   // M0/M0.5 调试事件（仅供 UIScene 演示事件总线链路）
   'debug:playerMoved': { x: number; y: number };
   'debug:toast': { text: string };

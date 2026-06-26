@@ -36,6 +36,25 @@ export class PreloadScene extends Phaser.Scene {
     g.fillStyle(0xe8c170, 1).fillRect(1, 1, 10, 14);
     g.fillStyle(0x3a2a18, 1).fillRect(1, 1, 10, 4);
     g.generateTexture('player', 12, 16);
+    g.clear();
+
+    // 物品图标（M1 占位：不同颜色的小方块，键名对应 items.ts 的 iconKey）
+    const icons: [string, number][] = [
+      ['icon_hoe', 0x9b7653],
+      ['icon_can', 0x4a90d9],
+      ['icon_pick', 0x9aa0a6],
+      ['icon_axe', 0xc0612a],
+      ['icon_seed_parsnip', 0xcdae6b],
+      ['icon_seed_greenbean', 0x88b04b],
+      ['icon_parsnip', 0xe8d39a],
+      ['icon_greenbean', 0x3fa34d],
+    ];
+    for (const [key, color] of icons) {
+      g.fillStyle(0x000000, 0.25).fillRect(0, 0, 14, 14);
+      g.fillStyle(color, 1).fillRect(1, 1, 12, 12);
+      g.generateTexture(key, 14, 14);
+      g.clear();
+    }
     g.destroy();
   }
 }

@@ -31,6 +31,12 @@ export const ENERGY_COST = {
 } as const;
 export const FAINT_HP_COST = 4; // 体力 ≤0 后每次动作改扣 HP
 
+// 晕倒/熬夜惩罚（SPEC 附录 A）
+export const FAINT_GOLD_PENALTY_RATE = 0.1;
+export const FAINT_GOLD_PENALTY_CAP_FARM = 100;
+export const FAINT_GOLD_PENALTY_CAP_MINE = 500;
+export const FAINT_MINE_ITEM_LOSS_MAX = 3;
+
 // 天气概率（按季，过夜掷次日；和为 1.0）
 export const WEATHER_PROBABILITY: Record<Season, Record<Weather, number>> = {
   spring: { sunny: 0.78, rain: 0.22, storm: 0, snow: 0 },

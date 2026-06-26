@@ -12,10 +12,12 @@ describe('createNewGame', () => {
     expect(CURRENT_SAVE_VERSION).toBe(1);
   });
 
-  it('inventory 定长 36，首格 15 个防风草种子', () => {
+  it('inventory 定长 36，前几格为工具+种子', () => {
     expect(save.inventory).toHaveLength(INVENTORY_SIZE);
-    expect(save.inventory[0]).toEqual({ itemId: 'parsnip_seeds', qty: 15 });
-    expect(save.inventory[1]).toBeNull();
+    expect(save.inventory[0]).toEqual({ itemId: 'hoe', qty: 1 });
+    expect(save.inventory[1]).toEqual({ itemId: 'wateringCan', qty: 1 });
+    expect(save.inventory[4]).toEqual({ itemId: 'parsnip_seeds', qty: 15 });
+    expect(save.inventory[6]).toBeNull();
   });
 
   it('player.tools 为 Record 形状、四基础工具 basic 档', () => {

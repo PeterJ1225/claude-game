@@ -1,20 +1,24 @@
 import Phaser from 'phaser';
 import { GameState } from '../save/GameState';
+import { setupSystems } from '../systems/setup';
+import { SaveSystem } from '../save/SaveSystem';
+import { createSaveStorage } from '../save/storageFactory';
 
 export class MainMenuScene extends Phaser.Scene {
+  private gameStarted = false;
+  private saveSystem: SaveSystem | null = null;
+
   constructor() {
     super('MainMenu');
   }
 
   create(): void {
     const cx = this.scale.width / 2;
-    this.add
-      .text(cx, 56, '星露谷物语类游戏', { fontSize: '16px', color: '#ffe9a8' })
-      .setOrigin(0.5);
-    this.add.text(cx, 78, '（M0 脚手架占位）', { fontSize: '8px', color: '#9fb0c0' }).setOrigin(0.5);
+    this.add.text(cx, 56, '星露谷物语类游戏', { fontSize: '16px', color: '#ffe9a8' }).setOrigin(0.5);
+    this.add.text(cx, 78, '（M1 核心农场循环）', { fontSize: '8px', color: '#9fb0c0' }).setOrigin(0.5);
 
     const start = this.add
-      .text(cx, 140, '▶ 新游戏', {
+      .text(cx, 134, '▶ 新游戏', {
         fontSize: '12px',
         color: '#ffffff',
         backgroundColor: '#2e6b3f',
@@ -24,25 +28,47 @@ export class MainMenuScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
     start.on('pointerover', () => start.setColor('#ffe9a8'));
     start.on('pointerout', () => start.setColor('#ffffff'));
-    start.once('pointerdown', () => this.startGame());
+    start.once('pointerdown', () => this.startNew());
 
-    this.add.text(cx, 166, '继续 / 设置（未实现）', { fontSize: '8px', color: '#5f6b78' }).setOrigin(0.5);
+    const cont = this.add
+      .text(cx, 164, '继续（读档）', { fontSize: '10px', color: '#5f6b78' })
+      .setOrigin(0.5);
+
     this.add
-      .text(cx, 244, '按 Enter 或点击「新游戏」开始 · WASD / 方向键移动', {
+      .text(cx, 238, 'Enter / 点击新游戏开始 · WASD 移动 · 空格用工具 · E 收获 · 床上 E 睡觉', {
         fontSize: '8px',
         color: '#7f8b98',
       })
       .setOrigin(0.5);
 
-    this.input.keyboard?.once('keydown-ENTER', () => this.startGame());
+    this.input.keyboard?.once('keydown-ENTER', () => this.startNew());
+
+    // 探测是否有存档 → 启用「继续」
+    void createSaveStorage().then(async (storage) => {
+      this.saveSystem = new SaveSystem(storage);
+      if (await this.saveSystem.exists()) {
+        cont.setColor('#ffffff').setInteractive({ useHandCursor: true });
+        cont.on('pointerover', () => cont.setColor('#ffe9a8'));
+        cont.on('pointerout', () => cont.setColor('#ffffff'));
+        cont.once('pointerdown', () => void this.continueGame());
+      }
+    });
   }
 
-  private gameStarted = false;
-
-  private startGame(): void {
-    if (this.gameStarted) return; // 防重入：快速点击 / 同时按 Enter
+  private startNew(): void {
+    if (this.gameStarted) return;
     this.gameStarted = true;
-    GameState.newGame(0x1a2b3c); // M0：固定种子占位
+    GameState.newGame(0x1a2b3c);
+    setupSystems();
+    this.scene.start('Farm');
+  }
+
+  private async continueGame(): Promise<void> {
+    if (this.gameStarted || !this.saveSystem) return;
+    const ok = await this.saveSystem.load();
+    if (!ok) return;
+    this.gameStarted = true;
+    setupSystems();
     this.scene.start('Farm');
   }
 }

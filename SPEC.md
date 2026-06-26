@@ -661,7 +661,7 @@ export interface SaveData {
 
 > **存档版本与迁移**【v2.2.1】：`schema.ts` 导出 `CURRENT_SAVE_VERSION = 1`。**本规格的 v2→v2.2 演进发生在编码之前，不存在任何历史存档，因此首个实现版本号即为 1，无需为 v2/v2.1 写迁移**（那些版本从未作为真实存档存在）。迁移机制 `migrate(raw): SaveData` 用于**首发之后**的结构变更：读档时若 `raw.version < CURRENT_SAVE_VERSION` 逐版升级，损坏/更高版本走容错降级（见 10.5）。每次改 SaveData 结构 → `CURRENT_SAVE_VERSION++` + 写迁移 + 迁移测试（见 10.4）。
 
-> **新游戏初始 SaveData（`createNewGame(): SaveData` 的必填默认值）**【v2.2.1】：`version=1`；`rng={ seed: <一次性熵>, state: seed }`；`player={ name, gold:500, energy:270, maxEnergy:270, hp:100, maxHp:100, position:农场屋门口, facing:'down', skills:四技能各 {level:1,xp:0}, tools:{ hoe:'basic', wateringCan:'basic', pickaxe:'basic', axe:'basic' }, wateringCanWater:40, hotbarSelectedIndex:0 }`；`time={ year:1, season:'spring', day:1, minute:360, weather:'sunny', tomorrowWeather:<按春季概率掷一次> }`；`inventory=` 长度 36 数组，`[0]={itemId:'parsnip_seeds',qty:15}`，其余 `null`；`shippingBin=[]`；`toolUpgrades=[]`；`chests={}`；`farm.tiles={}`；`relationships=` 各 NPC `{points:0,met:false,talkedToday:false,giftsThisWeek:0}`；`unlocked={recipes:[]（首发无预解锁配方，全部靠 RecipeDef.unlockedBy 在升级/解锁时触发写入）, shops:['seedShop',...首发即可进入的商店 id]}`；`mine={deepestLevel:0}`；`consumedDialogueNodes=[]`；`flags={}`；`settings={bgmVolume,sfxVolume,fullscreen:false,language:'zh'}`。具体数值取附录 A；`tests/saveSystem.test.ts` 覆盖"新游戏存档可被读回且字段完整"。
+> **新游戏初始 SaveData（`createNewGame(): SaveData` 的必填默认值）**【v2.2.1】：`version=1`；`rng={ seed: <一次性熵>, state: seed }`；`player={ name, gold:500, energy:270, maxEnergy:270, hp:100, maxHp:100, position:农场屋门口, facing:'down', skills:四技能各 {level:1,xp:0}, tools:{ hoe:'basic', wateringCan:'basic', pickaxe:'basic', axe:'basic' }, wateringCanWater:40, hotbarSelectedIndex:0 }`；`time={ year:1, season:'spring', day:1, minute:360, weather:'sunny', tomorrowWeather:<按春季概率掷一次> }`；`inventory=` 长度 36 数组（**M1 起：工具作为不可堆叠物品占前几格** `[0]=hoe,[1]=wateringCan,[2]=pickaxe,[3]=axe`，其后 `[4]=parsnip_seeds×15,[5]=greenbean_seeds×10`），其余 `null`；`shippingBin=[]`；`toolUpgrades=[]`；`chests={}`；`farm.tiles={}`；`relationships=` 各 NPC `{points:0,met:false,talkedToday:false,giftsThisWeek:0}`；`unlocked={recipes:[]（首发无预解锁配方，全部靠 RecipeDef.unlockedBy 在升级/解锁时触发写入）, shops:['seedShop',...首发即可进入的商店 id]}`；`mine={deepestLevel:0}`；`consumedDialogueNodes=[]`；`flags={}`；`settings={bgmVolume,sfxVolume,fullscreen:false,language:'zh'}`。具体数值取附录 A；`tests/saveSystem.test.ts` 覆盖"新游戏存档可被读回且字段完整"。
 
 ### 6.10 配方 Recipe【v2 新增】
 ```ts
@@ -924,6 +924,10 @@ export interface DialogueScript {
 | M0.5 | TauriFsStorage 走 `createSaveStorage()` 动态 import，按 `__TAURI_INTERNALS__` 探测 | 浏览器主包不打入 @tauri-apps/plugin-fs（已验证代码分割）；探测比 `__TAURI__` 可靠 |
 | M0.5 | Tauri 用 lib.rs(`run()`)+main.rs 形态；`tauri:dev/build` 前置 `check-rust.mjs` | Tauri 2 推荐形态、移动端可复用；缺 Rust 时给清晰提示不阻塞浏览器开发 |
 | M0.5 | 存档演示用 `K`/`L` 键（非 F5，F5 在浏览器会刷新） | 避免与浏览器快捷键冲突 |
+| M1 | 工具(锄/壶/镐/斧)作为不可堆叠背包物品(itemId=ToolType)占快捷栏格，档位仍查 `player.tools` | 保持"快捷栏=inventory 前12格"模型,又能 Stardew 式选用工具;`player.tools` 仍为档位唯一真相源 |
+| M1 | 各系统按 4.6 owner 实现为 ServiceLocator 注册的无状态单例,跨系统走 ServiceLocator + 受控同步/编排期结算方法 | 落地 4.6 通信模型;状态全在 GameState,系统可单测 |
+| M1 | 过夜结算的步 11 自动存档由睡觉编排者(FarmScene.sleep)在 processNewDay 后 await SaveSystem.save 完成 | save 是异步+注入存储,放场景编排;processNewDay 保持同步(步1–10) |
+| M1 | M1 农场无水源,水壶初始 40 次足够 DoD;补水(refillWateringCan 已备)留到有水源地图 | 不阻塞 M1 DoD,按里程碑推进 |
 
 ---
 

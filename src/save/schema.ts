@@ -2,6 +2,8 @@
 import type { InventorySlot, SaveData, SkillId, ToolTier, ToolType } from '../types';
 import { FARM_SPAWN, INVENTORY_SIZE } from '../config/constants';
 import { MAX_ENERGY, MAX_HP, START_GOLD, WATERING_CAN_CAPACITY } from '../config/balance';
+import { deriveValue } from '../utils/random';
+import { pickWeather } from '../systems/weather';
 
 // 首个实现版本。规格期演进（v2→v2.2）发生在编码前，无历史存档、无需迁移；
 // 迁移机制用于首发之后的结构变更：改 SaveData 结构 → ++ + 写 migrate 分支 + 测试。
@@ -18,7 +20,13 @@ const INITIAL_TOOLS: Record<ToolType, ToolTier> = {
 
 export function createNewGame(seed: number, playerName = 'Player'): SaveData {
   const inventory: (InventorySlot | null)[] = Array.from({ length: INVENTORY_SIZE }, () => null);
-  inventory[0] = { itemId: 'parsnip_seeds', qty: 15 };
+  // 工具作为不可堆叠物品占前几格（档位查 player.tools），其后是初始种子
+  inventory[0] = { itemId: 'hoe', qty: 1 };
+  inventory[1] = { itemId: 'wateringCan', qty: 1 };
+  inventory[2] = { itemId: 'pickaxe', qty: 1 };
+  inventory[3] = { itemId: 'axe', qty: 1 };
+  inventory[4] = { itemId: 'parsnip_seeds', qty: 15 };
+  inventory[5] = { itemId: 'greenbean_seeds', qty: 10 };
 
   const skills: Record<SkillId, { level: number; xp: number }> = {
     farming: { level: 1, xp: 0 },
@@ -49,8 +57,8 @@ export function createNewGame(seed: number, playerName = 'Player'): SaveData {
       season: 'spring',
       day: 1,
       minute: 360, // 06:00
-      weather: 'sunny',
-      tomorrowWeather: 'sunny', // M0 占位；后续由过夜流水线按天气概率掷定
+      weather: 'sunny', // 第 1 天固定晴
+      tomorrowWeather: pickWeather('spring', deriveValue(seed, 'weather', 1)), // 由种子域派生掷定
     },
     inventory,
     farm: { tiles: {} },
