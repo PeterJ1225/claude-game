@@ -1,0 +1,54 @@
+// 数值平衡基线（SPEC 附录 A）。实现以此为准，改动登记 ADR。
+
+import type { Season, Weather, ToolTier } from '../types';
+
+// 玩家
+export const MAX_ENERGY = 270;
+export const MAX_HP = 100;
+export const MOVE_SPEED = 80; // px/s（世界坐标）
+export const LOW_ENERGY_SPEED_FACTOR = 0.6;
+export const START_GOLD = 500;
+export const MAX_STACK = 999;
+export const INVINCIBILITY_MS = 700;
+
+// 水壶容量（按档）
+export const WATERING_CAN_CAPACITY: Record<ToolTier, number> = {
+  basic: 40,
+  copper: 60,
+  iron: 80,
+  gold: 100,
+  iridium: 120,
+};
+
+// 能耗（每次动作）
+export const ENERGY_COST = {
+  hoe: 2,
+  water: 2,
+  pickaxe: 2,
+  axe: 2,
+  sword: 2,
+  scythe: 0,
+} as const;
+export const FAINT_HP_COST = 4; // 体力 ≤0 后每次动作改扣 HP
+
+// 天气概率（按季，过夜掷次日；和为 1.0）
+export const WEATHER_PROBABILITY: Record<Season, Record<Weather, number>> = {
+  spring: { sunny: 0.78, rain: 0.22, storm: 0, snow: 0 },
+  summer: { sunny: 0.8, rain: 0.1, storm: 0.1, snow: 0 },
+  fall: { sunny: 0.78, rain: 0.22, storm: 0, snow: 0 },
+  winter: { sunny: 0.7, rain: 0, storm: 0, snow: 0.3 },
+};
+
+// 好感度
+export const HEART_POINTS = 250; // 1 心 = 250 点
+export const MAX_HEARTS = 10;
+export const GIFT_POINTS = { love: 80, like: 45, neutral: 20, dislike: -20, hate: -40 } as const;
+export const DAILY_TALK_POINTS = 20;
+export const GIFTS_PER_WEEK = 2;
+export const BIRTHDAY_GIFT_MULTIPLIER = 8;
+
+// 技能：升到 L 级所需累计 XP
+export function skillXpForLevel(level: number): number {
+  return level * level * 100;
+}
+export const MAX_SKILL_LEVEL = 10;

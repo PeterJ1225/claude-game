@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-ssr
+src-tauri/target
+*.local
+.claude/settings.local.json
+.DS_Store
+.vite
